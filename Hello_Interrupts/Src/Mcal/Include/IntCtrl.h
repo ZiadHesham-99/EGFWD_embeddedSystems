@@ -20,10 +20,10 @@
 /**********************************************************************************************************************
  *  GLOBAL CONSTANT MACROS
  *********************************************************************************************************************/
-#define INT_EN_REG_OFFSET 	(4*((u8)((INTX)/32)))
-#define INT_EN_BIT_NUM      (u8) ((INTX)%32)
-#define PRI_REG_OFFSET			(	4*((u8)(INTX/4)))
-#define PRI_BIT_SHIFT       (u8) (((INTX%4)*8)+5)
+#define INT_EN_REG_OFFSET(INTX) 	(4*((u8)((INTX)/32)))
+#define INT_EN_BIT_NUM(INTX)      ((u8) ((INTX)%32))
+#define PRI_REG_OFFSET(INTX)			(	4*((u8)(INTX/4)))
+#define PRI_BIT_SHIFT(INTX)      ((u8)(((INTX%4)*8)+5))
 
 /**********************************************************************************************************************
  *  GLOBAL FUNCTION MACROS
