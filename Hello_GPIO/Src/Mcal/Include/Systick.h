@@ -8,22 +8,19 @@
  *  Description:  header file for IntCrtl Module    
  *  
  *********************************************************************************************************************/
-#ifndef IntCrtl_H
-#define IntCrtl_H
+#ifndef Systick_H
+#define Systick_H
 
 /**********************************************************************************************************************
  * INCLUDES
  *********************************************************************************************************************/
 #include "Std_Types.h"
-#include "Intctrl_Lcfg.h"
+#include "Systick_Lcnfg.h"
 
 /**********************************************************************************************************************
  *  GLOBAL CONSTANT MACROS
  *********************************************************************************************************************/
-#define INT_EN_REG_OFFSET(INTX) 	(4*((u8)((INTX)/32)))
-#define INT_EN_BIT_NUM(INTX)      ((u8) ((INTX)%32))
-#define PRI_REG_OFFSET(INTX)			(	4*((u8)(INTX/4)))
-#define PRI_BIT_SHIFT(INTX)      ((u8)(((INTX%4)*8)+5))
+
 
 /**********************************************************************************************************************
  *  GLOBAL FUNCTION MACROS
@@ -33,19 +30,22 @@
 /**********************************************************************************************************************
  *  GLOBAL DATA TYPES AND STRUCTURES
  *********************************************************************************************************************/
-typedef enum
-{
-	INT_NUM_IS_INT0 = 16,
-	INT_NUM_IS_INT1 ,
-	INT_NUM_IS_INT2 ,
-	INT_NUM_IS_INT3 ,
-	INT_NUM_IS_INT4 ,
-	INT_NUM_IS_INT5 ,
-	INT_NUM_IS_INT6 ,
-	INT_NUM_IS_INT7 ,
-	INT_NUM_IS_INT8 
-
-}INT_NUM_IS;
+typedef enum {
+	SYS_DIV_BY_3_EQUL_66_67_MHZ = 3 ,
+	SYS_DIV_BY_4_EQUL_50_MHZ = 4 ,
+	SYS_DIV_BY_5_EQUL_40_MHZ = 5 ,
+	SYS_DIV_BY_6_EQUL_33_33_MHZ = 6 ,
+	SYS_DIV_BY_7_EQUL_28_57_MHZ = 7 ,
+	SYS_DIV_BY_8_EQUL_25_MHZ = 8 ,
+	SYS_DIV_BY_9_EQUL_22_22_MHZ = 9 ,
+	SYS_DIV_BY_10_EQUL_20_MHZ = 10 ,
+	SYS_DIV_BY_11_EQUL_18_18_MHZ = 11,
+	SYS_DIV_BY_12_EQUL_16_67_MHZ = 12 ,
+	SYS_DIV_BY_13_EQUL_15_38_MHZ = 13 ,
+	SYS_DIV_BY_14_EQUL_14_29_MHZ = 14 ,
+	SYS_DIV_BY_15_EQUL_13_33_MHZ = 15 ,
+	SYS_DIV_BY_16_EQUL_12_5_MHZ = 16 
+}SYS_DIV;
 
 /**********************************************************************************************************************
  *  GLOBAL DATA PROTOTYPES
@@ -67,7 +67,9 @@ typedef enum
 * \Parameters (out): None                                                      
 * \Return value:   : None
 *******************************************************************************/
-void IntCrtl_Init(void);
+void Systick_setRawClkSrc(void);
+
+void Systick_SetInternalOSC(SYS_DIV Freq );
  
 #endif  /* IntCrtl_H */
 

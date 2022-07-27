@@ -19,7 +19,7 @@
  *  GLOBAL CONSTANT MACROS
  *********************************************************************************************************************/
  /*number of Interrupts to be activated*/
- #define NUM_OF_INTS			(u8) 4
+ #define NUM_OF_INTS			(u8) 2
 /*APINT GROUP/SUBGROUP SETTING FROM 4 TO 7*/
 #define PRIGROUP_SETTING 			(u8) 5
 
@@ -31,7 +31,7 @@
 u8 IntNum , IntPri;
 };
 
-static struct Interrupts INTS [NUM_OF_INTS] = {{0,2},{1,1},{2,3},{3,7}};
+static struct Interrupts INTS [NUM_OF_INTS] = {{19,1} , {21,1}};
  
 /**********************************************************************************************************************
  *  GLOBAL FUNCTION MACROS

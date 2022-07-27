@@ -2,28 +2,26 @@
 
  *  FILE DESCRIPTION
  *  -------------------------------------------------------------------------------------------------------------------
- *         File:  IntCrtl.h
- *       Module:  IntCrtl
+ *         File:  <Write File Name>
+ *       Module:  -
  *
- *  Description:  header file for IntCrtl Module    
+ *  Description:  <Write File DESCRIPTION here>     
  *  
  *********************************************************************************************************************/
-#ifndef IntCrtl_H
-#define IntCrtl_H
+#ifndef STD_TYPES_H
+#define STD_TYPES_H
 
 /**********************************************************************************************************************
  * INCLUDES
  *********************************************************************************************************************/
-#include "Std_Types.h"
-#include "Intctrl_Lcfg.h"
+
 
 /**********************************************************************************************************************
  *  GLOBAL CONSTANT MACROS
  *********************************************************************************************************************/
-#define INT_EN_REG_OFFSET(INTX) 	(4*((u8)((INTX)/32)))
-#define INT_EN_BIT_NUM(INTX)      ((u8) ((INTX)%32))
-#define PRI_REG_OFFSET(INTX)			(	4*((u8)(INTX/4)))
-#define PRI_BIT_SHIFT(INTX)      ((u8)(((INTX%4)*8)+5))
+#define RT_OK		(u8)0
+#define RT_NOK		(u8)1
+#define NULL		(void *)0
 
 /**********************************************************************************************************************
  *  GLOBAL FUNCTION MACROS
@@ -33,19 +31,16 @@
 /**********************************************************************************************************************
  *  GLOBAL DATA TYPES AND STRUCTURES
  *********************************************************************************************************************/
-typedef enum
-{
-	INT_NUM_IS_INT0 = 16,
-	INT_NUM_IS_INT1 ,
-	INT_NUM_IS_INT2 ,
-	INT_NUM_IS_INT3 ,
-	INT_NUM_IS_INT4 ,
-	INT_NUM_IS_INT5 ,
-	INT_NUM_IS_INT6 ,
-	INT_NUM_IS_INT7 ,
-	INT_NUM_IS_INT8 
-
-}INT_NUM_IS;
+	typedef unsigned char u8;
+	typedef unsigned short int u16;
+	typedef unsigned long int u32;
+	
+	typedef signed char s8;
+	typedef signed short int s16;
+	typedef signed long int s32;
+	
+	typedef float f32;
+	typedef double f64;
 
 /**********************************************************************************************************************
  *  GLOBAL DATA PROTOTYPES
@@ -55,22 +50,10 @@ typedef enum
 /**********************************************************************************************************************
  *  GLOBAL FUNCTION PROTOTYPES
  *********************************************************************************************************************/
+
  
-/******************************************************************************
-* \Syntax          : void IntCrtl_Init(void)                                      
-* \Description     : initialize Nvic\SCB Module by parsing the Configuration 
-*                    into Nvic\SCB registers                                    
-*                                                                             
-* \Sync\Async      : Synchronous                                               
-* \Reentrancy      : Non Reentrant                                             
-* \Parameters (in) : None                     
-* \Parameters (out): None                                                      
-* \Return value:   : None
-*******************************************************************************/
-void IntCrtl_Init(void);
- 
-#endif  /* IntCrtl_H */
+#endif  /* FILE_NAME_H */
 
 /**********************************************************************************************************************
- *  END OF FILE: IntCrtl.h
+ *  END OF FILE: Std_Types.h
  *********************************************************************************************************************/

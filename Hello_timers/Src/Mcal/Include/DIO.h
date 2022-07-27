@@ -8,22 +8,19 @@
  *  Description:  header file for IntCrtl Module    
  *  
  *********************************************************************************************************************/
-#ifndef IntCrtl_H
-#define IntCrtl_H
+#ifndef DIO_H
+#define DIO_H
 
 /**********************************************************************************************************************
  * INCLUDES
  *********************************************************************************************************************/
 #include "Std_Types.h"
-#include "Intctrl_Lcfg.h"
+
 
 /**********************************************************************************************************************
  *  GLOBAL CONSTANT MACROS
  *********************************************************************************************************************/
-#define INT_EN_REG_OFFSET(INTX) 	(4*((u8)((INTX)/32)))
-#define INT_EN_BIT_NUM(INTX)      ((u8) ((INTX)%32))
-#define PRI_REG_OFFSET(INTX)			(	4*((u8)(INTX/4)))
-#define PRI_BIT_SHIFT(INTX)      ((u8)(((INTX%4)*8)+5))
+#define DIO_FULL_HIGH_PORT 	(u8) 255
 
 /**********************************************************************************************************************
  *  GLOBAL FUNCTION MACROS
@@ -35,18 +32,37 @@
  *********************************************************************************************************************/
 typedef enum
 {
-	INT_NUM_IS_INT0 = 16,
-	INT_NUM_IS_INT1 ,
-	INT_NUM_IS_INT2 ,
-	INT_NUM_IS_INT3 ,
-	INT_NUM_IS_INT4 ,
-	INT_NUM_IS_INT5 ,
-	INT_NUM_IS_INT6 ,
-	INT_NUM_IS_INT7 ,
-	INT_NUM_IS_INT8 
+	DIO_ChannelType_Pin_0 = 0 ,
+	DIO_ChannelType_Pin_1 = 1 ,
+	DIO_ChannelType_Pin_2 = 2 ,
+	DIO_ChannelType_Pin_3 = 3 ,
+	DIO_ChannelType_Pin_4 = 4 ,
+	DIO_ChannelType_Pin_5 = 5 ,
+	DIO_ChannelType_Pin_6 = 6 ,
+	DIO_ChannelType_Pin_7 = 7 
+}DIO_ChannelType;
 
-}INT_NUM_IS;
+typedef enum
+{
+	DIO_PortType_Port_A = 0 ,
+	DIO_PortType_Port_B = 1 ,
+	DIO_PortType_Port_C = 2 ,
+	DIO_PortType_Port_D = 3 ,
+	DIO_PortType_Port_E = 4 ,
+	DIO_PortType_Port_F = 5 
+}DIO_PortType;
+typedef enum
+{
+	DIO_LevelType_LOW =0 , 
+	DIO_LevelType_HIGH = 1 
+	
+}DIO_LevelType;
 
+typedef enum
+{
+	DIO_Direction_INPUT =0 , 
+	DIO_Direction_OUTPUT = 1
+}DIO_Channel_direction ;
 /**********************************************************************************************************************
  *  GLOBAL DATA PROTOTYPES
  *********************************************************************************************************************/
@@ -67,10 +83,14 @@ typedef enum
 * \Parameters (out): None                                                      
 * \Return value:   : None
 *******************************************************************************/
-void IntCrtl_Init(void);
- 
-#endif  /* IntCrtl_H */
+void DIO_setChannelDirection(DIO_PortType port ,DIO_ChannelType channel , DIO_Channel_direction direction);
+void DIO_WriteChannel(DIO_PortType port ,DIO_ChannelType channel , DIO_LevelType level);
+DIO_LevelType DIO_ReadChannel(DIO_PortType port ,DIO_ChannelType channel  );
+u32 DIO_ReadPort(DIO_PortType port);
+void DIO_WritePort(DIO_PortType port , u8 value);
+void DIO_setPortDirection(DIO_PortType port , DIO_Channel_direction direction);
+#endif  /* DIO_H */
 
 /**********************************************************************************************************************
- *  END OF FILE: IntCrtl.h
+ *  END OF FILE: DIO.h
  *********************************************************************************************************************/

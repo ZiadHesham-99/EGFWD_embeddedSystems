@@ -2,28 +2,38 @@
 
  *  FILE DESCRIPTION
  *  -------------------------------------------------------------------------------------------------------------------
- *         File:  IntCrtl.h
- *       Module:  IntCrtl
+ *         File:  <Write File Name>
+ *       Module:  -
  *
- *  Description:  header file for IntCrtl Module    
+ *  Description:  <Write File DESCRIPTION here>     
  *  
  *********************************************************************************************************************/
-#ifndef IntCrtl_H
-#define IntCrtl_H
+#ifndef GPT_Cnfg_H
+#define GPT_Cnfg_H
 
 /**********************************************************************************************************************
  * INCLUDES
  *********************************************************************************************************************/
 #include "Std_Types.h"
-#include "Intctrl_Lcfg.h"
 
 /**********************************************************************************************************************
  *  GLOBAL CONSTANT MACROS
  *********************************************************************************************************************/
-#define INT_EN_REG_OFFSET(INTX) 	(4*((u8)((INTX)/32)))
-#define INT_EN_BIT_NUM(INTX)      ((u8) ((INTX)%32))
-#define PRI_REG_OFFSET(INTX)			(	4*((u8)(INTX/4)))
-#define PRI_BIT_SHIFT(INTX)      ((u8)(((INTX%4)*8)+5))
+
+typedef enum{
+	GPT_PREDEF_TIMER_CONFIG_100US_32BIT = 0 ,
+	GPT_PREDEF_TIMER_CONFIG_1US_16BIT = 1 ,
+	GPT_PREDEF_TIMER_CONFIG_1US_24BIT = 2 ,
+	GPT_PREDEF_TIMER_CONFIG_1US_32BIT = 3 ,
+	GPT_PREDEF_TIMER_CONFIG_disabled = 4
+}GPT_PREDEF_TIMER_CONFIG;
+
+
+
+#define NUMBER_OF_ENABELED_TIMERS			((u8)2)
+
+#define TIMER0_PREDEF_SETTING				4
+
 
 /**********************************************************************************************************************
  *  GLOBAL FUNCTION MACROS
@@ -33,44 +43,52 @@
 /**********************************************************************************************************************
  *  GLOBAL DATA TYPES AND STRUCTURES
  *********************************************************************************************************************/
-typedef enum
-{
-	INT_NUM_IS_INT0 = 16,
-	INT_NUM_IS_INT1 ,
-	INT_NUM_IS_INT2 ,
-	INT_NUM_IS_INT3 ,
-	INT_NUM_IS_INT4 ,
-	INT_NUM_IS_INT5 ,
-	INT_NUM_IS_INT6 ,
-	INT_NUM_IS_INT7 ,
-	INT_NUM_IS_INT8 
+typedef   void (*GptNotification)(void);
 
-}INT_NUM_IS;
+typedef enum {
+	TIMER_CHANNEL_0 = 0 ,
+	TIMER_CHANNEL_1 = 1 ,
+	TIMER_CHANNEL_2 = 2 ,
+	TIMER_CHANNEL_3 = 3 ,
+	TIMER_CHANNEL_4 = 4 ,
+	TIMER_CHANNEL_5 = 5 ,
+	TIMER_CHANNEL_6 =	6 ,
+	TIMER_CHANNEL_7 = 7 ,
+	TIMER_CHANNEL_8 = 8 ,
+	TIMER_CHANNEL_9 = 9 ,
+	TIMER_CHANNEL_10 = 10 ,
+	TIMER_CHANNEL_11= 11 
+}TIMER_CHANNEL;
+
+
+
+typedef enum{
+	GPT_MODE_ONE_SHOT = 0 ,
+	GPT_MODE_PERIODIC = 1 
+}GPT_MODE;
+
+typedef struct {
+	TIMER_CHANNEL ChannelId ;
+	u8  GptChannelTickFrequency;
+	u32 GptChannelTickValueMax ;
+	GPT_MODE GptMode;
+	GptNotification callback ;
+}GPT_CONFIG_TYPE;
+
 
 /**********************************************************************************************************************
  *  GLOBAL DATA PROTOTYPES
  *********************************************************************************************************************/
 
+
  
 /**********************************************************************************************************************
  *  GLOBAL FUNCTION PROTOTYPES
  *********************************************************************************************************************/
+
  
-/******************************************************************************
-* \Syntax          : void IntCrtl_Init(void)                                      
-* \Description     : initialize Nvic\SCB Module by parsing the Configuration 
-*                    into Nvic\SCB registers                                    
-*                                                                             
-* \Sync\Async      : Synchronous                                               
-* \Reentrancy      : Non Reentrant                                             
-* \Parameters (in) : None                     
-* \Parameters (out): None                                                      
-* \Return value:   : None
-*******************************************************************************/
-void IntCrtl_Init(void);
- 
-#endif  /* IntCrtl_H */
+#endif  /* FILE_NAME_H */
 
 /**********************************************************************************************************************
- *  END OF FILE: IntCrtl.h
+ *  END OF FILE: Std_Types.h
  *********************************************************************************************************************/

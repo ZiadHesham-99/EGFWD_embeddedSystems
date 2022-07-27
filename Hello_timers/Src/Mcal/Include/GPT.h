@@ -8,22 +8,19 @@
  *  Description:  header file for IntCrtl Module    
  *  
  *********************************************************************************************************************/
-#ifndef IntCrtl_H
-#define IntCrtl_H
+#ifndef GPT_H
+#define GPT_H
 
 /**********************************************************************************************************************
  * INCLUDES
  *********************************************************************************************************************/
 #include "Std_Types.h"
-#include "Intctrl_Lcfg.h"
+#include "GPT_Cnfg.h"
 
 /**********************************************************************************************************************
  *  GLOBAL CONSTANT MACROS
  *********************************************************************************************************************/
-#define INT_EN_REG_OFFSET(INTX) 	(4*((u8)((INTX)/32)))
-#define INT_EN_BIT_NUM(INTX)      ((u8) ((INTX)%32))
-#define PRI_REG_OFFSET(INTX)			(	4*((u8)(INTX/4)))
-#define PRI_BIT_SHIFT(INTX)      ((u8)(((INTX%4)*8)+5))
+
 
 /**********************************************************************************************************************
  *  GLOBAL FUNCTION MACROS
@@ -33,19 +30,10 @@
 /**********************************************************************************************************************
  *  GLOBAL DATA TYPES AND STRUCTURES
  *********************************************************************************************************************/
-typedef enum
-{
-	INT_NUM_IS_INT0 = 16,
-	INT_NUM_IS_INT1 ,
-	INT_NUM_IS_INT2 ,
-	INT_NUM_IS_INT3 ,
-	INT_NUM_IS_INT4 ,
-	INT_NUM_IS_INT5 ,
-	INT_NUM_IS_INT6 ,
-	INT_NUM_IS_INT7 ,
-	INT_NUM_IS_INT8 
 
-}INT_NUM_IS;
+
+
+
 
 /**********************************************************************************************************************
  *  GLOBAL DATA PROTOTYPES
@@ -55,7 +43,19 @@ typedef enum
 /**********************************************************************************************************************
  *  GLOBAL FUNCTION PROTOTYPES
  *********************************************************************************************************************/
- 
+void GPT_Init(const GPT_CONFIG_TYPE * TimersCnfg);
+void GPT_StartTimer(TIMER_CHANNEL ChannelId ,u32 Value );
+void GPT_StopTimer(TIMER_CHANNEL ChannelId);
+u32 GPT_GetTimeElapsed(TIMER_CHANNEL ChannelId);
+u32 GPT_GetTimeRemaining(TIMER_CHANNEL ChannelId);
+u8 GPT_GetPredefTimerValue( GPT_PREDEF_TIMER_CONFIG PredefTimer , u32*TimerValuePtr);
+void GPT_EnableNotification(TIMER_CHANNEL ChannelId);
+void GPT_DisbleNotification(TIMER_CHANNEL ChannelId);
+/*void GPT_trial_func(u32 cont);
+void GPT_StartAndPoll(void);
+void GPT_32trial_func(u32 cont);
+void GPT_32StartAndPoll(void);
+*/
 /******************************************************************************
 * \Syntax          : void IntCrtl_Init(void)                                      
 * \Description     : initialize Nvic\SCB Module by parsing the Configuration 
@@ -67,10 +67,9 @@ typedef enum
 * \Parameters (out): None                                                      
 * \Return value:   : None
 *******************************************************************************/
-void IntCrtl_Init(void);
- 
-#endif  /* IntCrtl_H */
+
+#endif  /* DIO_H */
 
 /**********************************************************************************************************************
- *  END OF FILE: IntCrtl.h
+ *  END OF FILE: DIO.h
  *********************************************************************************************************************/
