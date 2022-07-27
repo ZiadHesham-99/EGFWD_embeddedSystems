@@ -1,47 +1,61 @@
 /**********************************************************************************************************************
+
  *  FILE DESCRIPTION
- *  -----------------------------------------------------------------------------------------------------------------*/
-/**        \file  IntCrtl.c
- *        \brief  Nested Vector Interrupt Controller Driver
+ *  -------------------------------------------------------------------------------------------------------------------
+ *         File:  IntCrtl.h
+ *       Module:  IntCrtl
  *
- *      \details  The Driver Configure All MCU interrupts Priority into gorups and subgroups
- *                Enable NVIC Interrupt Gate for Peripherals
- *
+ *  Description:  header file for IntCrtl Module    
+ *  
  *********************************************************************************************************************/
+#ifndef Systick_H
+#define Systick_H
 
 /**********************************************************************************************************************
- *  INCLUDES
+ * INCLUDES
  *********************************************************************************************************************/
 #include "Std_Types.h"
-#include "Bit_Math.h"
-#include "IntCtrl.h"
-#include "Reg.h"
+#include "Systick_Lcnfg.h"
 
 /**********************************************************************************************************************
-*  LOCAL MACROS CONSTANT\FUNCTION
-*********************************************************************************************************************/	
-
-/**********************************************************************************************************************
- *  LOCAL DATA 
+ *  GLOBAL CONSTANT MACROS
  *********************************************************************************************************************/
 
+
 /**********************************************************************************************************************
- *  GLOBAL DATA
+ *  GLOBAL FUNCTION MACROS
  *********************************************************************************************************************/
+
+
+/**********************************************************************************************************************
+ *  GLOBAL DATA TYPES AND STRUCTURES
+ *********************************************************************************************************************/
+typedef enum {
+	SYS_DIV_BY_3_EQUL_66_67_MHZ = 3 ,
+	SYS_DIV_BY_4_EQUL_50_MHZ = 4 ,
+	SYS_DIV_BY_5_EQUL_40_MHZ = 5 ,
+	SYS_DIV_BY_6_EQUL_33_33_MHZ = 6 ,
+	SYS_DIV_BY_7_EQUL_28_57_MHZ = 7 ,
+	SYS_DIV_BY_8_EQUL_25_MHZ = 8 ,
+	SYS_DIV_BY_9_EQUL_22_22_MHZ = 9 ,
+	SYS_DIV_BY_10_EQUL_20_MHZ = 10 ,
+	SYS_DIV_BY_11_EQUL_18_18_MHZ = 11,
+	SYS_DIV_BY_12_EQUL_16_67_MHZ = 12 ,
+	SYS_DIV_BY_13_EQUL_15_38_MHZ = 13 ,
+	SYS_DIV_BY_14_EQUL_14_29_MHZ = 14 ,
+	SYS_DIV_BY_15_EQUL_13_33_MHZ = 15 ,
+	SYS_DIV_BY_16_EQUL_12_5_MHZ = 16 
+}SYS_DIV;
+
+/**********************************************************************************************************************
+ *  GLOBAL DATA PROTOTYPES
+ *********************************************************************************************************************/
+
  
 /**********************************************************************************************************************
- *  LOCAL FUNCTION PROTOTYPES
+ *  GLOBAL FUNCTION PROTOTYPES
  *********************************************************************************************************************/
-
-/**********************************************************************************************************************
- *  LOCAL FUNCTIONS
- *********************************************************************************************************************/
-
-/**********************************************************************************************************************
- *  GLOBAL FUNCTIONS
- *********************************************************************************************************************/
-
-
+ 
 /******************************************************************************
 * \Syntax          : void IntCrtl_Init(void)                                      
 * \Description     : initialize Nvic\SCB Module by parsing the Configuration 
@@ -53,38 +67,12 @@
 * \Parameters (out): None                                                      
 * \Return value:   : None
 *******************************************************************************/
-extern struct Interrupts INTS [NUM_OF_INTS];
-void IntCrtl_Init(void)
-{
-	u8 i;
-	u8 IntId ,IntPri;
-	u32 temp=0;
-	/*TODO Configure Grouping\SubGrouping System in APINT register in SCB*/
-  temp = (0xFA050000)|((u8)PRIGROUP_SETTING<<8);
-	APINT_REG = temp;
-	for(i=0 ;i<NUM_OF_INTS;i++){
-		IntId = INTS[i].IntNum;
-		IntPri= INTS[i].IntPri;
-		/*TODO : Assign Group\Subgroup priority in NVIC_PRIx Nvic and SCB_SYSPRIx Registers*/  
-		u8 a =PRI_REG_OFFSET(IntId);
-		u8 b= PRI_BIT_SHIFT(IntId);
-		temp = *(PRI0_REG_ADDR+(PRI_REG_OFFSET(IntId)));
-		temp |= (IntPri << (PRI_BIT_SHIFT(IntId)));
-		*(PRI0_REG_ADDR+(PRI_REG_OFFSET(IntId))) = temp ;
-		/*TODO : Enable\Disable based on user configurations in NVIC_ENx and SCB_Sys Registers */
-		a=INT_EN_REG_OFFSET(IntId);
-		b= INT_EN_BIT_NUM (IntId);
-		temp = *(EN0_REG_ADDR+(INT_EN_REG_OFFSET(IntId)));
-		temp |= (1<<(INT_EN_BIT_NUM (IntId)));
-		*(EN0_REG_ADDR+(INT_EN_REG_OFFSET(IntId))) = temp ;
-	}
-	
-	/**/
-	*(volatile u32*)(CORTEXM4_PERI_BASE_ADDRESS+0xD04)= (0X9A<<11) ;
+void Systick_setRawClkSrc(void);
 
-	
-}
+void Systick_SetInternalOSC(SYS_DIV Freq );
+ 
+#endif  /* IntCrtl_H */
 
 /**********************************************************************************************************************
- *  END OF FILE: IntCrtl.c
+ *  END OF FILE: IntCrtl.h
  *********************************************************************************************************************/

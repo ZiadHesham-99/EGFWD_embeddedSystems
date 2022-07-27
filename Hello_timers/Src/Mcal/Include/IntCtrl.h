@@ -1,47 +1,61 @@
 /**********************************************************************************************************************
+
  *  FILE DESCRIPTION
- *  -----------------------------------------------------------------------------------------------------------------*/
-/**        \file  IntCrtl.c
- *        \brief  Nested Vector Interrupt Controller Driver
+ *  -------------------------------------------------------------------------------------------------------------------
+ *         File:  IntCrtl.h
+ *       Module:  IntCrtl
  *
- *      \details  The Driver Configure All MCU interrupts Priority into gorups and subgroups
- *                Enable NVIC Interrupt Gate for Peripherals
- *
+ *  Description:  header file for IntCrtl Module    
+ *  
  *********************************************************************************************************************/
+#ifndef IntCrtl_H
+#define IntCrtl_H
 
 /**********************************************************************************************************************
- *  INCLUDES
+ * INCLUDES
  *********************************************************************************************************************/
 #include "Std_Types.h"
-#include "Bit_Math.h"
-#include "IntCtrl.h"
-#include "Reg.h"
+#include "Intctrl_Lcfg.h"
 
 /**********************************************************************************************************************
-*  LOCAL MACROS CONSTANT\FUNCTION
-*********************************************************************************************************************/	
+ *  GLOBAL CONSTANT MACROS
+ *********************************************************************************************************************/
+#define INT_EN_REG_OFFSET(INTX) 	(4*((u8)((INTX)/32)))
+#define INT_EN_BIT_NUM(INTX)      ((u8) ((INTX)%32))
+#define PRI_REG_OFFSET(INTX)			(	4*((u8)(INTX/4)))
+#define PRI_BIT_SHIFT(INTX)      ((u8)(((INTX%4)*8)+5))
 
 /**********************************************************************************************************************
- *  LOCAL DATA 
+ *  GLOBAL FUNCTION MACROS
  *********************************************************************************************************************/
 
+
 /**********************************************************************************************************************
- *  GLOBAL DATA
+ *  GLOBAL DATA TYPES AND STRUCTURES
  *********************************************************************************************************************/
+typedef enum
+{
+	INT_NUM_IS_INT0 = 16,
+	INT_NUM_IS_INT1 ,
+	INT_NUM_IS_INT2 ,
+	INT_NUM_IS_INT3 ,
+	INT_NUM_IS_INT4 ,
+	INT_NUM_IS_INT5 ,
+	INT_NUM_IS_INT6 ,
+	INT_NUM_IS_INT7 ,
+	INT_NUM_IS_INT8 
+
+}INT_NUM_IS;
+
+/**********************************************************************************************************************
+ *  GLOBAL DATA PROTOTYPES
+ *********************************************************************************************************************/
+
  
 /**********************************************************************************************************************
- *  LOCAL FUNCTION PROTOTYPES
+ *  GLOBAL FUNCTION PROTOTYPES
  *********************************************************************************************************************/
-
-/**********************************************************************************************************************
- *  LOCAL FUNCTIONS
- *********************************************************************************************************************/
-
-/**********************************************************************************************************************
- *  GLOBAL FUNCTIONS
- *********************************************************************************************************************/
-
-
+ 
 /******************************************************************************
 * \Syntax          : void IntCrtl_Init(void)                                      
 * \Description     : initialize Nvic\SCB Module by parsing the Configuration 
@@ -53,38 +67,10 @@
 * \Parameters (out): None                                                      
 * \Return value:   : None
 *******************************************************************************/
-extern struct Interrupts INTS [NUM_OF_INTS];
-void IntCrtl_Init(void)
-{
-	u8 i;
-	u8 IntId ,IntPri;
-	u32 temp=0;
-	/*TODO Configure Grouping\SubGrouping System in APINT register in SCB*/
-  temp = (0xFA050000)|((u8)PRIGROUP_SETTING<<8);
-	APINT_REG = temp;
-	for(i=0 ;i<NUM_OF_INTS;i++){
-		IntId = INTS[i].IntNum;
-		IntPri= INTS[i].IntPri;
-		/*TODO : Assign Group\Subgroup priority in NVIC_PRIx Nvic and SCB_SYSPRIx Registers*/  
-		u8 a =PRI_REG_OFFSET(IntId);
-		u8 b= PRI_BIT_SHIFT(IntId);
-		temp = *(PRI0_REG_ADDR+(PRI_REG_OFFSET(IntId)));
-		temp |= (IntPri << (PRI_BIT_SHIFT(IntId)));
-		*(PRI0_REG_ADDR+(PRI_REG_OFFSET(IntId))) = temp ;
-		/*TODO : Enable\Disable based on user configurations in NVIC_ENx and SCB_Sys Registers */
-		a=INT_EN_REG_OFFSET(IntId);
-		b= INT_EN_BIT_NUM (IntId);
-		temp = *(EN0_REG_ADDR+(INT_EN_REG_OFFSET(IntId)));
-		temp |= (1<<(INT_EN_BIT_NUM (IntId)));
-		*(EN0_REG_ADDR+(INT_EN_REG_OFFSET(IntId))) = temp ;
-	}
-	
-	/**/
-	*(volatile u32*)(CORTEXM4_PERI_BASE_ADDRESS+0xD04)= (0X9A<<11) ;
-
-	
-}
+void IntCrtl_Init(void);
+ 
+#endif  /* IntCrtl_H */
 
 /**********************************************************************************************************************
- *  END OF FILE: IntCrtl.c
+ *  END OF FILE: IntCrtl.h
  *********************************************************************************************************************/

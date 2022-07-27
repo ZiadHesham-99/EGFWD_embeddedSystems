@@ -1,47 +1,61 @@
 /**********************************************************************************************************************
+
  *  FILE DESCRIPTION
- *  -----------------------------------------------------------------------------------------------------------------*/
-/**        \file  IntCrtl.c
- *        \brief  Nested Vector Interrupt Controller Driver
+ *  -------------------------------------------------------------------------------------------------------------------
+ *         File:  IntCrtl.h
+ *       Module:  IntCrtl
  *
- *      \details  The Driver Configure All MCU interrupts Priority into gorups and subgroups
- *                Enable NVIC Interrupt Gate for Peripherals
- *
+ *  Description:  header file for IntCrtl Module    
+ *  
  *********************************************************************************************************************/
+#ifndef GPT_H
+#define GPT_H
 
 /**********************************************************************************************************************
- *  INCLUDES
+ * INCLUDES
  *********************************************************************************************************************/
 #include "Std_Types.h"
-#include "Bit_Math.h"
-#include "IntCtrl.h"
-#include "Reg.h"
+#include "GPT_Cnfg.h"
 
 /**********************************************************************************************************************
-*  LOCAL MACROS CONSTANT\FUNCTION
-*********************************************************************************************************************/	
-
-/**********************************************************************************************************************
- *  LOCAL DATA 
+ *  GLOBAL CONSTANT MACROS
  *********************************************************************************************************************/
 
+
 /**********************************************************************************************************************
- *  GLOBAL DATA
+ *  GLOBAL FUNCTION MACROS
  *********************************************************************************************************************/
+
+
+/**********************************************************************************************************************
+ *  GLOBAL DATA TYPES AND STRUCTURES
+ *********************************************************************************************************************/
+
+
+
+
+
+/**********************************************************************************************************************
+ *  GLOBAL DATA PROTOTYPES
+ *********************************************************************************************************************/
+
  
 /**********************************************************************************************************************
- *  LOCAL FUNCTION PROTOTYPES
+ *  GLOBAL FUNCTION PROTOTYPES
  *********************************************************************************************************************/
-
-/**********************************************************************************************************************
- *  LOCAL FUNCTIONS
- *********************************************************************************************************************/
-
-/**********************************************************************************************************************
- *  GLOBAL FUNCTIONS
- *********************************************************************************************************************/
-
-
+void GPT_Init(const GPT_CONFIG_TYPE * TimersCnfg);
+void GPT_StartTimer(TIMER_CHANNEL ChannelId ,u32 Value );
+void GPT_StopTimer(TIMER_CHANNEL ChannelId);
+u32 GPT_GetTimeElapsed(TIMER_CHANNEL ChannelId);
+u32 GPT_GetTimeRemaining(TIMER_CHANNEL ChannelId);
+u8 GPT_GetPredefTimerValue( GPT_PREDEF_TIMER_CONFIG PredefTimer , u32*TimerValuePtr);
+void GPT_EnableNotification(TIMER_CHANNEL ChannelId);
+void GPT_DisbleNotification(TIMER_CHANNEL ChannelId);
+/*void GPT_trial_func(u32 cont);
+void GPT_StartAndPoll(void);
+void GPT_32trial_func(u32 cont);
+void GPT_32StartAndPoll(void);
+*/
 /******************************************************************************
 * \Syntax          : void IntCrtl_Init(void)                                      
 * \Description     : initialize Nvic\SCB Module by parsing the Configuration 
@@ -53,38 +67,9 @@
 * \Parameters (out): None                                                      
 * \Return value:   : None
 *******************************************************************************/
-extern struct Interrupts INTS [NUM_OF_INTS];
-void IntCrtl_Init(void)
-{
-	u8 i;
-	u8 IntId ,IntPri;
-	u32 temp=0;
-	/*TODO Configure Grouping\SubGrouping System in APINT register in SCB*/
-  temp = (0xFA050000)|((u8)PRIGROUP_SETTING<<8);
-	APINT_REG = temp;
-	for(i=0 ;i<NUM_OF_INTS;i++){
-		IntId = INTS[i].IntNum;
-		IntPri= INTS[i].IntPri;
-		/*TODO : Assign Group\Subgroup priority in NVIC_PRIx Nvic and SCB_SYSPRIx Registers*/  
-		u8 a =PRI_REG_OFFSET(IntId);
-		u8 b= PRI_BIT_SHIFT(IntId);
-		temp = *(PRI0_REG_ADDR+(PRI_REG_OFFSET(IntId)));
-		temp |= (IntPri << (PRI_BIT_SHIFT(IntId)));
-		*(PRI0_REG_ADDR+(PRI_REG_OFFSET(IntId))) = temp ;
-		/*TODO : Enable\Disable based on user configurations in NVIC_ENx and SCB_Sys Registers */
-		a=INT_EN_REG_OFFSET(IntId);
-		b= INT_EN_BIT_NUM (IntId);
-		temp = *(EN0_REG_ADDR+(INT_EN_REG_OFFSET(IntId)));
-		temp |= (1<<(INT_EN_BIT_NUM (IntId)));
-		*(EN0_REG_ADDR+(INT_EN_REG_OFFSET(IntId))) = temp ;
-	}
-	
-	/**/
-	*(volatile u32*)(CORTEXM4_PERI_BASE_ADDRESS+0xD04)= (0X9A<<11) ;
 
-	
-}
+#endif  /* DIO_H */
 
 /**********************************************************************************************************************
- *  END OF FILE: IntCrtl.c
+ *  END OF FILE: DIO.h
  *********************************************************************************************************************/

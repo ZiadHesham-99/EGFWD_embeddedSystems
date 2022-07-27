@@ -1,47 +1,77 @@
 /**********************************************************************************************************************
+
  *  FILE DESCRIPTION
- *  -----------------------------------------------------------------------------------------------------------------*/
-/**        \file  IntCrtl.c
- *        \brief  Nested Vector Interrupt Controller Driver
+ *  -------------------------------------------------------------------------------------------------------------------
+ *         File:  IntCrtl.h
+ *       Module:  IntCrtl
  *
- *      \details  The Driver Configure All MCU interrupts Priority into gorups and subgroups
- *                Enable NVIC Interrupt Gate for Peripherals
- *
+ *  Description:  header file for IntCrtl Module    
+ *  
  *********************************************************************************************************************/
+#ifndef DIO_H
+#define DIO_H
 
 /**********************************************************************************************************************
- *  INCLUDES
+ * INCLUDES
  *********************************************************************************************************************/
 #include "Std_Types.h"
-#include "Bit_Math.h"
-#include "IntCtrl.h"
-#include "Reg.h"
+
 
 /**********************************************************************************************************************
-*  LOCAL MACROS CONSTANT\FUNCTION
-*********************************************************************************************************************/	
+ *  GLOBAL CONSTANT MACROS
+ *********************************************************************************************************************/
+#define DIO_FULL_HIGH_PORT 	(u8) 255
 
 /**********************************************************************************************************************
- *  LOCAL DATA 
+ *  GLOBAL FUNCTION MACROS
  *********************************************************************************************************************/
 
+
 /**********************************************************************************************************************
- *  GLOBAL DATA
+ *  GLOBAL DATA TYPES AND STRUCTURES
  *********************************************************************************************************************/
+typedef enum
+{
+	DIO_ChannelType_Pin_0 = 0 ,
+	DIO_ChannelType_Pin_1 = 1 ,
+	DIO_ChannelType_Pin_2 = 2 ,
+	DIO_ChannelType_Pin_3 = 3 ,
+	DIO_ChannelType_Pin_4 = 4 ,
+	DIO_ChannelType_Pin_5 = 5 ,
+	DIO_ChannelType_Pin_6 = 6 ,
+	DIO_ChannelType_Pin_7 = 7 
+}DIO_ChannelType;
+
+typedef enum
+{
+	DIO_PortType_Port_A = 0 ,
+	DIO_PortType_Port_B = 1 ,
+	DIO_PortType_Port_C = 2 ,
+	DIO_PortType_Port_D = 3 ,
+	DIO_PortType_Port_E = 4 ,
+	DIO_PortType_Port_F = 5 
+}DIO_PortType;
+typedef enum
+{
+	DIO_LevelType_LOW =0 , 
+	DIO_LevelType_HIGH = 1 
+	
+}DIO_LevelType;
+
+typedef enum
+{
+	DIO_Direction_INPUT =0 , 
+	DIO_Direction_OUTPUT = 1
+}DIO_Channel_direction ;
+/**********************************************************************************************************************
+ *  GLOBAL DATA PROTOTYPES
+ *********************************************************************************************************************/
+
  
 /**********************************************************************************************************************
- *  LOCAL FUNCTION PROTOTYPES
+ *  GLOBAL FUNCTION PROTOTYPES
  *********************************************************************************************************************/
-
-/**********************************************************************************************************************
- *  LOCAL FUNCTIONS
- *********************************************************************************************************************/
-
-/**********************************************************************************************************************
- *  GLOBAL FUNCTIONS
- *********************************************************************************************************************/
-
-
+ 
 /******************************************************************************
 * \Syntax          : void IntCrtl_Init(void)                                      
 * \Description     : initialize Nvic\SCB Module by parsing the Configuration 
@@ -53,38 +83,14 @@
 * \Parameters (out): None                                                      
 * \Return value:   : None
 *******************************************************************************/
-extern struct Interrupts INTS [NUM_OF_INTS];
-void IntCrtl_Init(void)
-{
-	u8 i;
-	u8 IntId ,IntPri;
-	u32 temp=0;
-	/*TODO Configure Grouping\SubGrouping System in APINT register in SCB*/
-  temp = (0xFA050000)|((u8)PRIGROUP_SETTING<<8);
-	APINT_REG = temp;
-	for(i=0 ;i<NUM_OF_INTS;i++){
-		IntId = INTS[i].IntNum;
-		IntPri= INTS[i].IntPri;
-		/*TODO : Assign Group\Subgroup priority in NVIC_PRIx Nvic and SCB_SYSPRIx Registers*/  
-		u8 a =PRI_REG_OFFSET(IntId);
-		u8 b= PRI_BIT_SHIFT(IntId);
-		temp = *(PRI0_REG_ADDR+(PRI_REG_OFFSET(IntId)));
-		temp |= (IntPri << (PRI_BIT_SHIFT(IntId)));
-		*(PRI0_REG_ADDR+(PRI_REG_OFFSET(IntId))) = temp ;
-		/*TODO : Enable\Disable based on user configurations in NVIC_ENx and SCB_Sys Registers */
-		a=INT_EN_REG_OFFSET(IntId);
-		b= INT_EN_BIT_NUM (IntId);
-		temp = *(EN0_REG_ADDR+(INT_EN_REG_OFFSET(IntId)));
-		temp |= (1<<(INT_EN_BIT_NUM (IntId)));
-		*(EN0_REG_ADDR+(INT_EN_REG_OFFSET(IntId))) = temp ;
-	}
-	
-	/**/
-	*(volatile u32*)(CORTEXM4_PERI_BASE_ADDRESS+0xD04)= (0X9A<<11) ;
-
-	
-}
+void DIO_setChannelDirection(DIO_PortType port ,DIO_ChannelType channel , DIO_Channel_direction direction);
+void DIO_WriteChannel(DIO_PortType port ,DIO_ChannelType channel , DIO_LevelType level);
+DIO_LevelType DIO_ReadChannel(DIO_PortType port ,DIO_ChannelType channel  );
+u32 DIO_ReadPort(DIO_PortType port);
+void DIO_WritePort(DIO_PortType port , u8 value);
+void DIO_setPortDirection(DIO_PortType port , DIO_Channel_direction direction);
+#endif  /* DIO_H */
 
 /**********************************************************************************************************************
- *  END OF FILE: IntCrtl.c
+ *  END OF FILE: DIO.h
  *********************************************************************************************************************/
